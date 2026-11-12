@@ -28,7 +28,7 @@ namespace Library
                         Pause();
                         break;
                     case "2":
-                        Console.WriteLine("Поки не зроблено.");
+                        ShowPenaltyTable();
                         Pause();
                         break;
                     case "3":
@@ -65,6 +65,16 @@ namespace Library
             Console.WriteLine("genre - string");
             Console.WriteLine("copies - int");
             Console.WriteLine("isIssued - bool");
+        }
+
+        static void ShowPenaltyTable()
+        {
+            Console.WriteLine("     Дні |    Пеня");
+            for (double days = 1.0; days <= 5.0 + 1e-9; days += 0.5)
+            {
+                double penalty = days * 5.0;
+                Console.WriteLine($"{days,8:F2} | {penalty,7:F2}");
+            }
         }
     }
 }
