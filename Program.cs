@@ -32,7 +32,7 @@ namespace Library
                         Pause();
                         break;
                     case "3":
-                        Console.WriteLine("Поки не зроблено.");
+                        ShowIssuanceTable();
                         Pause();
                         break;
                     case "0":
@@ -75,6 +75,57 @@ namespace Library
                 double penalty = days * 5.0;
                 Console.WriteLine($"{days,8:F2} | {penalty,7:F2}");
             }
+        }
+
+        static void ShowIssuanceTable()
+        {
+            Console.Write("Кількість жанрів (рядків): ");
+            if (!int.TryParse(Console.ReadLine(), out int rows) || rows <= 0)
+            {
+                Console.WriteLine("Помилка: введіть число більше 0.");
+                return;
+            }
+
+            Console.Write("Кількість днів (стовпців): ");
+            if (!int.TryParse(Console.ReadLine(), out int cols) || cols <= 0)
+            {
+                Console.WriteLine("Помилка: введіть число більше 0.");
+                return;
+            }
+
+            int[] colSums = new int[cols];
+            int totalSum = 0;
+
+            Console.Write($"{"Жанр",-10}");
+            for (int c = 1; c <= cols; c++)
+            {
+                Console.Write($"{$"День {c}",8}");
+            }
+            Console.WriteLine($"{"Разом",8}");
+
+            for (int r = 1; r <= rows; r++)
+            {
+                int rowSum = 0;
+                Console.Write($"{$"Жанр {r}",-10}");
+
+                for (int c = 1; c <= cols; c++)
+                {
+                    int books = r + c;
+                    Console.Write($"{books,8}");
+                    rowSum += books;
+                    colSums[c - 1] += books;
+                }
+
+                Console.WriteLine($"{rowSum,8}");
+                totalSum += rowSum;
+            }
+
+            Console.Write($"{"Всього",-10}");
+            for (int c = 0; c < cols; c++)
+            {
+                Console.Write($"{colSums[c],8}");
+            }
+            Console.WriteLine($"{totalSum,8}");
         }
     }
 }
