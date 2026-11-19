@@ -12,7 +12,7 @@ namespace Library
 
             while (running)
             {
-                Console.WriteLine("=== Бібліотека ===");
+                Console.WriteLine("== Бібліотека ==");
                 Console.WriteLine("1 - довідка");
                 Console.WriteLine("2 - розрахунок пені");
                 Console.WriteLine("3 - таблиця видачі");
