@@ -19,7 +19,7 @@ namespace Library
                 switch (choice)
                 {
                     case "1": ShowAbout(); Pause(); break;
-                    case "2": PrintPenaltyTable(1.0, 5.0, 0.5); Pause(); break;
+                    case "2": HandlePenaltyTable(); Pause(); break;
                     case "3": ShowIssuanceTable(); Pause(); break;
                     case "0": running = false; break;
                     default: Console.WriteLine("Немає такого пункту."); Pause(); break;
@@ -58,6 +58,52 @@ namespace Library
             Console.WriteLine("isIssued - bool");
         }
 
+        static double ReadDouble(string prompt, double min, double max)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                if (!double.TryParse(Console.ReadLine(), out double value))
+                {
+                    Console.WriteLine("Помилка: введіть число.");
+                    continue;
+                }
+                if (value < min || value > max)
+                {
+                    Console.WriteLine($"Помилка: число має бути від {min} до {max}.");
+                    continue;
+                }
+                return value;
+            }
+        }
+
+        static int ReadInt(string prompt, int min, int max)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                if (!int.TryParse(Console.ReadLine(), out int value))
+                {
+                    Console.WriteLine("Помилка: введіть ціле число.");
+                    continue;
+                }
+                if (value < min || value > max)
+                {
+                    Console.WriteLine($"Помилка: число має бути від {min} до {max}.");
+                    continue;
+                }
+                return value;
+            }
+        }
+
+        static void HandlePenaltyTable()
+        {
+            double start = ReadDouble("Початкова кількість днів (1-100): ", 1, 100);
+            double end = ReadDouble("Кінцева кількість днів (1-365): ", start, 365);
+            double step = ReadDouble("Крок (0.1-10): ", 0.1, 10);
+            PrintPenaltyTable(start, end, step);
+        }
+
         static double CalculatePenalty(double days, double rate)
         {
             return days * rate;
@@ -65,7 +111,7 @@ namespace Library
 
         static void PrintPenaltyTable(double start, double end, double step)
         {
-            Console.WriteLine("     Дні |    Пеня");
+            Console.WriteLine("\n     Дні |    Пеня");
             for (double days = start; days <= end + 1e-9; days += step)
             {
                 double penalty = CalculatePenalty(days, 5.0);
@@ -75,24 +121,13 @@ namespace Library
 
         static void ShowIssuanceTable()
         {
-            Console.Write("Кількість жанрів (рядків): ");
-            if (!int.TryParse(Console.ReadLine(), out int rows) || rows <= 0)
-            {
-                Console.WriteLine("Помилка: введіть число більше 0.");
-                return;
-            }
-
-            Console.Write("Кількість днів (стовпців): ");
-            if (!int.TryParse(Console.ReadLine(), out int cols) || cols <= 0)
-            {
-                Console.WriteLine("Помилка: введіть число більше 0.");
-                return;
-            }
+            int rows = ReadInt("Кількість жанрів (1-20): ", 1, 20);
+            int cols = ReadInt("Кількість днів (1-31): ", 1, 31);
 
             int[] colSums = new int[cols];
             int totalSum = 0;
 
-            Console.Write($"{"Жанр",-10}");
+            Console.Write($"\n{"Жанр",-10}");
             for (int c = 1; c <= cols; c++)
             {
                 Console.Write($"{$"День {c}",8}");
