@@ -12,38 +12,29 @@ namespace Library
 
             while (running)
             {
-                Console.WriteLine("== Бібліотека ==");
-                Console.WriteLine("1 - довідка");
-                Console.WriteLine("2 - розрахунок пені");
-                Console.WriteLine("3 - таблиця видачі");
-                Console.WriteLine("0 - вихід");
-                Console.Write("Вибір: ");
-
+                ShowMenu();
                 string choice = Console.ReadLine();
+                Console.WriteLine();
 
                 switch (choice)
                 {
-                    case "1":
-                        ShowAbout();
-                        Pause();
-                        break;
-                    case "2":
-                        ShowPenaltyTable();
-                        Pause();
-                        break;
-                    case "3":
-                        ShowIssuanceTable();
-                        Pause();
-                        break;
-                    case "0":
-                        running = false;
-                        break;
-                    default:
-                        Console.WriteLine("Немає такого пункту.");
-                        Pause();
-                        break;
+                    case "1": ShowAbout(); Pause(); break;
+                    case "2": PrintPenaltyTable(1.0, 5.0, 0.5); Pause(); break;
+                    case "3": ShowIssuanceTable(); Pause(); break;
+                    case "0": running = false; break;
+                    default: Console.WriteLine("Немає такого пункту."); Pause(); break;
                 }
             }
+        }
+
+        static void ShowMenu()
+        {
+            Console.WriteLine("=== Бібліотека ===");
+            Console.WriteLine("1 - довідка");
+            Console.WriteLine("2 - розрахунок пені");
+            Console.WriteLine("3 - таблиця видачі");
+            Console.WriteLine("0 - вихід");
+            Console.Write("Вибір: ");
         }
 
         static void Pause()
@@ -67,12 +58,17 @@ namespace Library
             Console.WriteLine("isIssued - bool");
         }
 
-        static void ShowPenaltyTable()
+        static double CalculatePenalty(double days, double rate)
+        {
+            return days * rate;
+        }
+
+        static void PrintPenaltyTable(double start, double end, double step)
         {
             Console.WriteLine("     Дні |    Пеня");
-            for (double days = 1.0; days <= 5.0 + 1e-9; days += 0.5)
+            for (double days = start; days <= end + 1e-9; days += step)
             {
-                double penalty = days * 5.0;
+                double penalty = CalculatePenalty(days, 5.0);
                 Console.WriteLine($"{days,8:F2} | {penalty,7:F2}");
             }
         }
