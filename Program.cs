@@ -28,6 +28,8 @@ namespace Library
                         Pause();
                         break;
                     case "3": PrintValues(penalties, count); Pause(); break;
+                    case "4": ShowStatistics(penalties, count); Pause(); break;
+                    case "5": RunReferenceExperiment(); Pause(); break;
                     case "0": running = false; break;
                     default: Console.WriteLine("Немає такого пункту."); Pause(); break;
                 }
@@ -40,6 +42,8 @@ namespace Library
             Console.WriteLine("1 - довідка");
             Console.WriteLine("2 - додати значення пені");
             Console.WriteLine("3 - показати всі записи");
+            Console.WriteLine("4 - показати статистику (максимум і середнє)");
+            Console.WriteLine("5 - дослід: значимий та посилальний типи");
             Console.WriteLine("0 - вихід");
             Console.Write("Вибір: ");
         }
@@ -120,6 +124,63 @@ namespace Library
             {
                 Console.WriteLine($"{i + 1,2} | {values[i],9:F2}");
             }
+        }
+
+        static void FindMax(double[] values, int count, out double maxValue, out int maxIndex)
+        {
+            if (count == 0)
+            {
+                maxValue = 0;
+                maxIndex = -1;
+                return;
+            }
+
+            maxValue = values[0];
+            maxIndex = 0;
+            for (int i = 1; i < count; i++)
+            {
+                if (values[i] > maxValue)
+                {
+                    maxValue = values[i];
+                    maxIndex = i;
+                }
+            }
+        }
+
+        static void ShowStatistics(double[] values, int count)
+        {
+            if (count == 0)
+            {
+                Console.WriteLine("Немає даних для статистики (масив порожній).");
+                return;
+            }
+
+            FindMax(values, count, out double maxVal, out int maxIdx);
+            Console.WriteLine($"Кількість записів: {count}");
+            Console.WriteLine($"Найбільша пеня: {maxVal:F2} (запис №{maxIdx + 1})");
+        }
+
+        static void TryChangeInt(int number)
+        {
+            number = 999;
+        }
+
+        static void ChangeFirstElement(double[] arr)
+        {
+            arr[0] = 999.0;
+        }
+
+        static void RunReferenceExperiment()
+        {
+            int x = 10;
+            Console.WriteLine($"До виклику TryChangeInt: x = {x}");
+            TryChangeInt(x);
+            Console.WriteLine($"Після виклику TryChangeInt: x = {x} (не змінився, бо передана копія)");
+
+            double[] demoArr = { 10.0, 20.0, 30.0 };
+            Console.WriteLine($"\nДо виклику ChangeFirstElement: demoArr[0] = {demoArr[0]}");
+            ChangeFirstElement(demoArr);
+            Console.WriteLine($"Після виклику ChangeFirstElement: demoArr[0] = {demoArr[0]} (змінився, бо передано посилання)");
         }
     }
 }
