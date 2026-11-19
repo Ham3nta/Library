@@ -8,6 +8,8 @@ namespace Library
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+            double[] penalties = new double[100];
+            int count = 0;
             bool running = true;
 
             while (running)
@@ -19,8 +21,13 @@ namespace Library
                 switch (choice)
                 {
                     case "1": ShowAbout(); Pause(); break;
-                    case "2": HandlePenaltyTable(); Pause(); break;
-                    case "3": ShowIssuanceTable(); Pause(); break;
+                    case "2":
+                        double val = ReadDouble("Введіть суму пені (0.5 - 1000): ", 0.5, 1000);
+                        AddValue(penalties, ref count, val);
+                        Console.WriteLine($"Поточна кількість записів у Main: {count}");
+                        Pause();
+                        break;
+                    case "3": PrintValues(penalties, count); Pause(); break;
                     case "0": running = false; break;
                     default: Console.WriteLine("Немає такого пункту."); Pause(); break;
                 }
@@ -29,10 +36,10 @@ namespace Library
 
         static void ShowMenu()
         {
-            Console.WriteLine("=== Бібліотека ===");
+            Console.WriteLine("=== Бібліотека (Робота з масивом пені) ===");
             Console.WriteLine("1 - довідка");
-            Console.WriteLine("2 - розрахунок пені");
-            Console.WriteLine("3 - таблиця видачі");
+            Console.WriteLine("2 - додати значення пені");
+            Console.WriteLine("3 - показати всі записи");
             Console.WriteLine("0 - вихід");
             Console.Write("Вибір: ");
         }
@@ -48,14 +55,7 @@ namespace Library
         {
             Console.WriteLine("Тема: Бібліотека");
             Console.WriteLine("Сутність: Книга");
-            Console.WriteLine("Поля:");
-            Console.WriteLine("id - int");
-            Console.WriteLine("title - string");
-            Console.WriteLine("author - string");
-            Console.WriteLine("publishYear - int");
-            Console.WriteLine("genre - string");
-            Console.WriteLine("copies - int");
-            Console.WriteLine("isIssued - bool");
+            Console.WriteLine("Поля: id (int), title (string), author (string), publishYear (int), genre (string), copies (int), isIssued (bool)");
         }
 
         static double ReadDouble(string prompt, double min, double max)
@@ -96,67 +96,30 @@ namespace Library
             }
         }
 
-        static void HandlePenaltyTable()
+        static void AddValue(double[] values, ref int count, double newValue)
         {
-            double start = ReadDouble("Початкова кількість днів (1-100): ", 1, 100);
-            double end = ReadDouble("Кінцева кількість днів (1-365): ", start, 365);
-            double step = ReadDouble("Крок (0.1-10): ", 0.1, 10);
-            PrintPenaltyTable(start, end, step);
+            if (count >= values.Length)
+            {
+                Console.WriteLine("Місця в масиві більше немає.");
+                return;
+            }
+            values[count] = newValue;
+            count++;
         }
 
-        static double CalculatePenalty(double days, double rate)
+        static void PrintValues(double[] values, int count)
         {
-            return days * rate;
-        }
-
-        static void PrintPenaltyTable(double start, double end, double step)
-        {
-            Console.WriteLine("\n     Дні |    Пеня");
-            for (double days = start; days <= end + 1e-9; days += step)
+            if (count == 0)
             {
-                double penalty = CalculatePenalty(days, 5.0);
-                Console.WriteLine($"{days,8:F2} | {penalty,7:F2}");
-            }
-        }
-
-        static void ShowIssuanceTable()
-        {
-            int rows = ReadInt("Кількість жанрів (1-20): ", 1, 20);
-            int cols = ReadInt("Кількість днів (1-31): ", 1, 31);
-
-            int[] colSums = new int[cols];
-            int totalSum = 0;
-
-            Console.Write($"\n{"Жанр",-10}");
-            for (int c = 1; c <= cols; c++)
-            {
-                Console.Write($"{$"День {c}",8}");
-            }
-            Console.WriteLine($"{"Разом",8}");
-
-            for (int r = 1; r <= rows; r++)
-            {
-                int rowSum = 0;
-                Console.Write($"{$"Жанр {r}",-10}");
-
-                for (int c = 1; c <= cols; c++)
-                {
-                    int books = r + c;
-                    Console.Write($"{books,8}");
-                    rowSum += books;
-                    colSums[c - 1] += books;
-                }
-
-                Console.WriteLine($"{rowSum,8}");
-                totalSum += rowSum;
+                Console.WriteLine("Масив порожній.");
+                return;
             }
 
-            Console.Write($"{"Всього",-10}");
-            for (int c = 0; c < cols; c++)
+            Console.WriteLine(" № | Сума пені");
+            for (int i = 0; i < count; i++)
             {
-                Console.Write($"{colSums[c],8}");
+                Console.WriteLine($"{i + 1,2} | {values[i],9:F2}");
             }
-            Console.WriteLine($"{totalSum,8}");
         }
     }
 }
