@@ -24,12 +24,17 @@ namespace Library
                     case "2":
                         double val = ReadDouble("Введіть суму пені (0.5 - 1000): ", 0.5, 1000);
                         AddValue(penalties, ref count, val);
-                        Console.WriteLine($"Поточна кількість записів у Main: {count}");
+                        Console.WriteLine($"Додано. Всього записів: {count}");
                         Pause();
                         break;
-                    case "3": PrintValues(penalties, count); Pause(); break;
-                    case "4": ShowStatistics(penalties, count); Pause(); break;
-                    case "5": RunReferenceExperiment(); Pause(); break;
+                    case "3":
+                        int num = ReadInt("Введіть номер запису для видалення: ", 1, 100);
+                        RemoveAt(penalties, ref count, num - 1);
+                        Pause();
+                        break;
+                    case "4": PrintValues(penalties, count); Pause(); break;
+                    case "5": ShowStatistics(penalties, count); Pause(); break;
+                    case "6": RunReferenceExperiment(); Pause(); break;
                     case "0": running = false; break;
                     default: Console.WriteLine("Немає такого пункту."); Pause(); break;
                 }
@@ -40,10 +45,11 @@ namespace Library
         {
             Console.WriteLine("=== Бібліотека (Робота з масивом пені) ===");
             Console.WriteLine("1 - довідка");
-            Console.WriteLine("2 - додати значення пені");
-            Console.WriteLine("3 - показати всі записи");
-            Console.WriteLine("4 - показати статистику (максимум і середнє)");
-            Console.WriteLine("5 - дослід: значимий та посилальний типи");
+            Console.WriteLine("2 - додати значення");
+            Console.WriteLine("3 - видалити за номером");
+            Console.WriteLine("4 - показати всі записи");
+            Console.WriteLine("5 - показати статистику");
+            Console.WriteLine("6 - дослід: значимий та посилальний типи");
             Console.WriteLine("0 - вихід");
             Console.Write("Вибір: ");
         }
@@ -109,6 +115,22 @@ namespace Library
             }
             values[count] = newValue;
             count++;
+        }
+
+        static void RemoveAt(double[] values, ref int count, int index)
+        {
+            if (index < 0 || index >= count)
+            {
+                Console.WriteLine("Помилка: запису з таким номером не існує.");
+                return;
+            }
+
+            for (int i = index; i < count - 1; i++)
+            {
+                values[i] = values[i + 1];
+            }
+            count--;
+            Console.WriteLine($"Запис №{index + 1} видалено. Залишилося записів: {count}");
         }
 
         static void PrintValues(double[] values, int count)
